@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What Matters to Me at Work?</title>
+<style>
+  :root{
+    --gold:#FFCD00;
+    --black:#111111;
+    --ink:#222222;
+    --muted:#666666;
+    --line:#D6D6D6;
+    --soft:#F7F7F7;
+    --soft2:#EFEFEF;
+    --white:#FFFFFF;
+    --shadow:0 7px 18px rgba(0,0,0,.08);
+    --radius:20px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--soft);
+    color:var(--ink);
+    font-family:Roboto,Arial,Helvetica,sans-serif;
+    line-height:1.45;
+  }
+  button,input,textarea{font:inherit}
+  button{cursor:pointer}
+  .shell{max-width:1080px;margin:0 auto;padding:28px 18px 64px}
+  .topmark{width:56px;height:8px;background:var(--gold);border-radius:999px;margin-bottom:18px}
+  h1,h2,h3{font-family:Antonio,"Arial Narrow",Arial,sans-serif;color:var(--black);line-height:1.08}
+  h1{font-size:clamp(2rem,5vw,3.6rem);margin:0 0 12px;letter-spacing:.1px}
+  h2{font-size:clamp(1.5rem,3vw,2.15rem);margin:0 0 10px}
+  h3{font-size:1.17rem;margin:0 0 8px}
+  p{margin:0 0 12px}
+  .lede{font-size:1.06rem;max-width:760px;color:#3f3f3f}
+  .micro{font-size:.9rem;color:var(--muted)}
+  .progress-wrap{margin:24px 0 18px}
+  .progress-row{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:.88rem;color:#555;margin-bottom:8px}
+  .track{height:9px;background:#E3E3E3;border-radius:999px;overflow:hidden}
+  .bar{height:100%;width:0;background:var(--gold);transition:width .25s ease}
+  .step{display:none}
+  .step.active{display:block}
+  .panel{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:24px;
+    margin-bottom:18px;
+  }
+  .stepbadge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    font-size:.78rem;margin-bottom:10px;
+  }
+  .stepbadge span{
+    width:30px;height:30px;border-radius:50%;
+    display:inline-grid;place-items:center;background:var(--gold);color:var(--black)
+  }
+  .callout{
+    background:#FFF8CC;border:1px solid #E8CD46;border-radius:16px;padding:14px 16px;margin:16px 0;
+  }
+  .sortcard{
+    border:2px solid #222;border-radius:20px;padding:28px 22px;background:#fff;min-height:180px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;margin:18px 0;
+  }
+  .sortcard .counter{font-size:.85rem;color:var(--muted);margin-bottom:8px}
+  .sortcard .value{font-family:Antonio,"Arial Narrow",Arial,sans-serif;font-size:clamp(1.55rem,4vw,2.25rem);line-height:1.15;max-width:680px}
+  .choice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .choice{
+    border:1.5px solid #222;background:#fff;color:#111;border-radius:14px;padding:13px 10px;font-weight:700;min-height:58px;
+  }
+  .choice:hover,.choice:focus-visible{background:#F0F0F0}
+  .choice.avoid{border-style:dashed}
+  .nav{display:flex;justify-content:space-between;gap:12px;margin-top:20px;flex-wrap:wrap}
+  .btn{
+    border:1.5px solid #111;border-radius:999px;padding:11px 18px;font-weight:800;background:#fff;color:#111;
+  }
+  .btn.primary{background:#111;color:#fff}
+  .btn.gold{background:var(--gold);color:#111}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn.small{padding:8px 13px;font-size:.9rem}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+  .select-card{
+    border:1.5px solid #BEBEBE;border-radius:16px;padding:15px;background:#fff;text-align:left;min-height:74px;
+  }
+  .select-card strong{display:block;color:#111}
+  .select-card.selected{border-color:#111;background:#EFEFEF;box-shadow:inset 0 0 0 1px #111}
+  .select-card.priority{position:relative;padding-right:72px}
+  .select-card.priority::after{
+    content:"PRIORITY";position:absolute;right:10px;top:10px;
+    background:var(--gold);border-radius:999px;padding:4px 7px;font-size:.67rem;font-weight:900;letter-spacing:.04em;
+  }
+  .summary-strip{
+    display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 2px
+  }
+  .pill{
+    border:1px solid #C9C9C9;background:#F5F5F5;padding:7px 10px;border-radius:999px;font-size:.9rem
+  }
+  .rank-wrap{display:grid;gap:11px;margin-top:14px}
+  .rank-row{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center}
+  .rank-num{
+    width:36px;height:36px;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-weight:900
+  }
+  .deal-row{
+    border-top:1px solid #E1E1E1;padding:16px 0;
+  }
+  .deal-row:first-child{border-top:0}
+  .segmented{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .segmented button{
+    border:1px solid #AFAFAF;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;
+  }
+  .segmented button.on{background:#111;color:#fff;border-color:#111}
+  .meaning-block{border-top:1px solid #E1E1E1;padding-top:18px;margin-top:18px}
+  .check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:10px 0}
+  .check{
+    display:flex;gap:9px;align-items:flex-start;border:1px solid #D2D2D2;border-radius:13px;padding:10px 12px;background:#fff;
+  }
+  .check input{margin-top:4px}
+  textarea,input[type="text"]{
+    width:100%;border:1.5px solid #AFAFAF;border-radius:12px;padding:11px 12px;background:#fff;color:#111
+  }
+  textarea{min-height:88px;resize:vertical}
+  .research-notes{min-height:210px;width:100%;display:block}
+  .profile-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  .result-card{
+    border:1px solid #CFCFCF;border-radius:16px;padding:16px;background:#fff;margin:10px 0;
+  }
+  .result-card.priority-card{border-left:7px solid var(--gold)}
+  .label{
+    font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;font-weight:900;color:#555;margin-bottom:5px
+  }
+  .research-row{
+    border-top:1px solid #E0E0E0;padding-top:18px;margin-top:18px;
+  }
+  .research-options{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .research-options button{
+    border:1px solid #aaa;background:#fff;border-radius:999px;padding:8px 11px;font-weight:700
+  }
+  .research-options button.on{background:#111;color:#fff;border-color:#111}
+  .question{
+    background:#F4F4F4;border-radius:12px;padding:11px 13px;margin:7px 0;
+  }
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .footer-note{margin-top:24px;border-top:1px solid #D1D1D1;padding-top:16px;color:#666;font-size:.88rem}
+
+  .value-table{width:100%;border-collapse:collapse;margin-top:14px}
+  .value-table th,.value-table td{padding:12px 10px;border-bottom:1px solid #E1E1E1;text-align:left;vertical-align:top}
+  .research-table{table-layout:fixed}
+  .research-table th:nth-child(1),.research-table td:nth-child(1){width:18%}
+  .research-table th:nth-child(2),.research-table td:nth-child(2){width:54%}
+  .research-table th:nth-child(3),.research-table td:nth-child(3){width:28%}
+  .value-table th{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:#555}
+  .value-table td:first-child{font-weight:700}
+  .value-table .scope-cell{white-space:nowrap}
+  .mini-note{font-size:.86rem;color:#666;margin-top:4px}
+  .compact-check{display:flex;align-items:center;gap:9px}
+  .compact-check input{width:18px;height:18px}
+
+  .hidden{display:none!important}
+  .warn{color:#7A4600;font-weight:700;font-size:.9rem;margin-top:8px}
+  
+  @media (max-width:760px){
+    .research-table,.research-table thead,.research-table tbody,.research-table tr,.research-table th,.research-table td{display:block;width:100%!important}
+    .research-table thead{display:none}
+    .research-table tr{border:1px solid #D8D8D8;border-radius:14px;margin-bottom:14px;padding:10px;background:#fff}
+    .research-table td{border-bottom:0;padding:9px 6px}
+  }
+
+  @media (max-width:720px){
+    .choice-grid{grid-template-columns:1fr 1fr}
+    .cards,.check-grid,.profile-grid{grid-template-columns:1fr}
+    .panel{padding:18px}
+    .shell{padding:22px 13px 48px}
+  }
+  @media (max-width:430px){
+    .choice-grid{grid-template-columns:1fr}
+    .nav .btn{flex:1}
+  }
+  @media print{
+    body{background:#fff}
+    .shell{max-width:none;padding:0}
+    .topmark,.progress-wrap,.nav,.toolbar,.no-print,.step:not(.active){display:none!important}
+    .panel{box-shadow:none;border:0;padding:0}
+    .result-card{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topmark"></div>
+  <header>
+    <h1>What Matters to Me at Work?</h1>
+    <p class="lede">Sort through what matters to you, identify priorities and possible non-negotiables, define what those values mean to you, and learn whether to investigate them through career research, workplace research, or both.</p>
+    <p class="micro">There are no right answers. Choose what matters to you — not what you think should matter.</p>
+  </header>
+
+  <div class="progress-wrap" aria-label="Activity progress">
+    <div class="progress-row"><span id="progressLabel">Step 1 of 6</span><span id="progressName">Quick sort</span></div>
+    <div class="track"><div class="bar" id="progressBar"></div></div>
+  </div>
+
+  <main>
+    <section class="step active" data-step="1">
+      <div class="panel">
+        <div class="stepbadge"><span>1</span> Quick sort</div>
+        <h2>What catches your attention?</h2>
+        <p>Move quickly. You can narrow things down later.</p>
+        <div class="sortcard">
+          <div class="counter" id="sortCounter"></div>
+          <div class="value" id="sortValue"></div>
+        </div>
+        <div class="choice-grid">
+          <button class="choice" data-sort="really">Really matters to me</button>
+          <button class="choice" data-sort="might">Might matter to me</button>
+          <button class="choice" data-sort="low">Not very important</button>
+          <button class="choice avoid" data-sort="avoid">I'd rather avoid this</button>
+        </div>
+        <div class="nav">
+          <button class="btn" id="sortBack" type="button">Back</button>
+          <button class="btn" id="sortSkip" type="button">Skip for now</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="2">
+      <div class="panel">
+        <div class="stepbadge"><span>2</span> Choose your top 5</div>
+        <h2>Choose your top 5 values.</h2>
+        <p>Pick the five values you most want to use when comparing career options. Then mark up to <strong>3</strong> as your strongest priorities.</p>
+        <div class="callout" id="mightExpandBox">
+          <strong>Start with the values you marked “Really matters to me.”</strong>
+          <p class="micro" style="margin-top:5px">Need more options? You can also bring in values you marked “Might matter to me.”</p>
+          <button class="btn small" id="toggleMight" type="button">Show “Might matter to me” values</button>
+        </div>
+        <div class="cards" id="priorityCards"></div>
+        <div class="callout">
+          <strong>Your strongest priorities</strong>
+          <p class="micro" style="margin-top:5px">After choosing your priority values, click the star button on up to 3.</p>
+          <div class="summary-strip" id="strongestPills"></div>
+        </div>
+        <div class="warn hidden" id="priorityWarn">Choose exactly 5 priority values and mark at least 1 strongest priority.</div>
+        <div class="nav">
+          <button class="btn" data-back="2">Back</button>
+          <button class="btn primary" id="toStep3">Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="3">
+      <div class="panel">
+        <div class="stepbadge"><span>3</span> Choose your non-negotiables</div>
+        <h2>Which of these are non-negotiable?</h2>
+        <p>Select only the values you would be very unlikely to compromise on. Leave the rest unselected.</p>
+        <div id="dealRows"></div>
+
+        <div class="callout">
+          <h3>Things I may want to avoid</h3>
+          <p class="micro">These came from your first sort. Keep the ones you want included in your final profile.</p>
+          <div class="cards" id="avoidCards"></div>
+        </div>
+
+        <div class="nav">
+          <button class="btn" data-back="3">Back</button>
+          <button class="btn primary" id="toStep4">Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="4">
+      <div class="panel">
+        <div class="stepbadge"><span>4</span> Make it concrete</div>
+        <h2>What would these values look like in real life?</h2>
+        <p>Values can mean different things to different people. Define what your strongest priorities would actually look like in a workplace.</p>
+        <div class="callout">
+          <strong>Later, we’ll show you where each value is most useful to investigate.</strong>
+          <div class="summary-strip">
+            <span class="pill">🔎 Career</span>
+            <span class="pill">🏢 Workplace</span>
+            <span class="pill">↔ Both</span>
+          </div>
+        </div>
+        <div id="meaningRows"></div>
+        <div class="nav">
+          <button class="btn" data-back="4">Back</button>
+          <button class="btn primary" id="toStep5">Build my profile</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="5">
+      <div class="panel">
+        <div class="stepbadge"><span>5</span> Your Values Profile</div>
+        <h2>Use this as a research lens — not a rulebook.</h2>
+        <p>A career may meet a value in ways you do not expect, and the same career can look very different across workplaces.</p>
+        <div class="callout">
+          <strong>Notice where each value comes from.</strong>
+          <p class="micro" style="margin-top:6px">Some values are mostly about the <strong>career/work itself</strong>, some depend more on the <strong>specific workplace or employer</strong>, and some are shaped by <strong>both</strong>. The labels below show where to look for evidence.</p>
+        </div>
+        <div class="result-card">
+          <div class="label">Values to carry into career research</div>
+          <div id="finalFocusValues"></div>
+        </div>
+
+        <div class="profile-grid">
+          <div>
+            <div class="label">What matters most</div>
+            <div id="profilePriorities"></div>
+          </div>
+          <div>
+            <div class="result-card">
+              <div class="label">Possible must-haves</div>
+              <div id="profileMust"></div>
+            </div>
+            <div class="result-card">
+              <div class="label">Strong preferences</div>
+              <div id="profilePrefs"></div>
+            </div>
+            <div class="result-card">
+              <div class="label">Things I may want to avoid</div>
+              <div id="profileAvoid"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar no-print">
+          <button class="btn primary" id="copyProfile">Copy my profile</button>
+          <button class="btn gold" id="toStep6">Continue to career research</button>
+          <button class="btn" id="printProfile">Print / Save PDF</button>
+          <button class="btn" id="editAnswers">Edit answers</button>
+        </div>
+        <div id="copyFallback" class="callout hidden no-print">
+          <strong>Copy manually</strong>
+          <p class="micro" style="margin-top:5px">Your browser or ICON may block automatic clipboard access. The text below is selected for you — press <strong>Ctrl+C</strong> (Windows) or <strong>Command+C</strong> (Mac).</p>
+          <textarea id="copyFallbackText" style="min-height:220px"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="6">
+      <div class="panel">
+        <div class="stepbadge"><span>6</span> Career research</div>
+        <h2>Use your most important values in career research.</h2>
+        <p>This page focuses on <strong>3–6 values you marked “Really matters to me.”</strong> Bring in anything useful you found in <strong>YouScience</strong>, O*NET, career pages, classes, or conversations, then use the prompts to go further.</p>
+        <label for="careerName"><strong>Career I'm researching</strong></label>
+        <input id="careerName" type="text" placeholder="Example: School psychologist" />
+        <div id="researchRows"></div>
+
+        <div class="callout" style="margin-top:20px">
+          <h3>Questions this research gave me</h3>
+          <div id="questionOutput"></div>
+        </div>
+
+        <p class="micro no-print" style="margin-top:16px"><strong>Using Class Notebook?</strong> The Class Notebook version uses simple headings and bullets so it pastes cleanly into OneNote.</p>
+        <div class="toolbar no-print">
+          <button class="btn primary" id="copyResearch">Copy full profile + research</button>
+          <button class="btn" id="copyNotebook">Copy for Class Notebook</button>
+          <button class="btn" id="saveResearch">Save for another career tool</button>
+          <button class="btn" id="resetTool">Start over</button>
+        </div>
+        <div id="researchCopyFallback" class="callout hidden no-print">
+          <strong>Copy manually</strong>
+          <p class="micro" style="margin-top:5px">Automatic copy is blocked here. Select the text below and press <strong>Ctrl+C</strong> (Windows) or <strong>Command+C</strong> (Mac).</p>
+          <textarea id="researchCopyFallbackText" style="min-height:260px"></textarea>
+        </div>
+      </div>
+      <div class="nav no-print">
+        <button class="btn" data-back="5">Back to my values profile</button>
+      </div>
+      <div class="footer-note">
+        Your responses stay in this browser unless you copy, print, or save them for another tool.
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const VALUES = [
+"Connection with coworkers",
+"Growth and development",
+"Being active and moving around",
+"Benefits and financial security",
+"Workplace safety and well-being",
+"Work-life balance",
+"Supportive management and feedback",
+"Teaching or mentoring others",
+"Solving challenging problems",
+"Leadership and responsibility",
+"Working in my local community",
+"Creativity",
+"Independence and autonomy",
+"Fast-paced or exciting work",
+"Travel or adventure",
+"Recognition and appreciation",
+"Predictability and routine",
+"Calm or manageable pace",
+"Flexibility",
+"Helping other people",
+"Purpose and meaning",
+"Fun and enjoyment at work",
+"Time off",
+"Earning potential",
+"Entrepreneurship",
+"Teamwork and collaboration",
+"Building or inventing things",
+"Working outdoors",
+"Public or community service",
+"Working with my hands",
+"Remote or hybrid work"
+];
+
+const VALUE_INFO = {
+"Connection with coworkers":{scope:"workplace",note:"This is usually shaped more by team culture and the specific workplace than by the occupation itself."},
+"Growth and development":{scope:"both",note:"A career can offer growth paths, but access to mentoring, training, and advancement often depends on the employer."},
+"Being active and moving around":{scope:"career",note:"The amount of movement is often built into the day-to-day tasks of the occupation."},
+"Benefits and financial security":{scope:"workplace",note:"Benefits are primarily employer-dependent, while overall earning potential can also vary by occupation."},
+"Workplace safety and well-being":{scope:"workplace",note:"Policies, culture, supervision, and working conditions can differ substantially across employers."},
+"Work-life balance":{scope:"both",note:"Some careers have common scheduling demands, but boundaries, workload, and expectations also vary greatly by employer."},
+"Supportive management and feedback":{scope:"workplace",note:"This is mainly about the manager, supervision structure, and workplace culture."},
+"Teaching or mentoring others":{scope:"career",note:"Whether teaching or mentoring is part of the work is often tied to the role itself."},
+"Solving challenging problems":{scope:"career",note:"The kinds and frequency of problems are usually connected to the actual work tasks."},
+"Leadership and responsibility":{scope:"both",note:"Some roles naturally carry more responsibility, while leadership opportunities also depend on the organization."},
+"Working in my local community":{scope:"both",note:"Some careers are place-based, but employer type and location also shape how locally connected the work feels."},
+"Creativity":{scope:"both",note:"Some occupations inherently require creative work, but employers differ in how much freedom people have to try new approaches."},
+"Independence and autonomy":{scope:"both",note:"The occupation creates some limits, but supervision style and organizational culture can dramatically change autonomy."},
+"Fast-paced or exciting work":{scope:"both",note:"Some careers are naturally fast-moving, while pace can also vary by setting, employer, season, or team."},
+"Travel or adventure":{scope:"career",note:"Travel is often tied to the role, although frequency can still vary across employers."},
+"Recognition and appreciation":{scope:"workplace",note:"Recognition practices are mostly shaped by managers and organizational culture."},
+"Predictability and routine":{scope:"both",note:"Some roles have predictable workflows, while employer setting and scheduling can make the same career more or less routine."},
+"Calm or manageable pace":{scope:"both",note:"Career demands matter, but workload, staffing, and workplace culture can change the experience substantially."},
+"Flexibility":{scope:"both",note:"Some careers offer more scheduling flexibility, but actual control over hours usually varies by employer and setting."},
+"Helping other people":{scope:"career",note:"Who benefits from the work and how directly you help are often connected to the occupation itself."},
+"Purpose and meaning":{scope:"both",note:"The work itself matters, but population served, mission, setting, and employer can strongly affect how meaningful it feels."},
+"Fun and enjoyment at work":{scope:"both",note:"Enjoyment comes from both the type of work and the people, environment, and culture around it."},
+"Time off":{scope:"workplace",note:"Vacation, sick leave, holidays, and leave policies are usually employer-dependent."},
+"Earning potential":{scope:"both",note:"Occupation strongly affects typical pay ranges, while employer, setting, geography, and experience also matter."},
+"Entrepreneurship":{scope:"career",note:"Owning or building a business is a career-direction preference rather than an employer characteristic."},
+"Teamwork and collaboration":{scope:"both",note:"Some careers require collaboration, but how much and how it happens varies by workplace."},
+"Building or inventing things":{scope:"career",note:"This is usually tied to the nature of the occupation and its core tasks."},
+"Working outdoors":{scope:"career",note:"Outdoor work is usually a characteristic of the role or occupation."},
+"Public or community service":{scope:"both",note:"Some careers commonly serve the public, while employer sector and mission also shape this value."},
+"Working with my hands":{scope:"career",note:"Hands-on work is generally a characteristic of the occupation itself."},
+"Remote or hybrid work":{scope:"workplace",note:"Remote options usually depend more on employer policies and setting than on the career title alone."}
+};
+
+const MEANINGS = {
+"Connection with coworkers":["Knowing my coworkers well","Having people I can ask for help","Regular informal interaction","Feeling included","Friendships or social connection at work"],
+"Growth and development":["Learning new skills","Training or professional development","Having a mentor","Opportunities to advance","Taking on more responsibility over time"],
+"Benefits and financial security":["Health insurance","Retirement benefits","Paid leave","Family-related benefits","Reliable compensation"],
+"Workplace safety and well-being":["Feeling physically safe","Reasonable workload","Support for mental health","Respectful treatment","A healthy work environment"],
+"Work-life balance":["Work rarely follows me home","Reasonable expectations for hours","People actually use their time off","Boundaries are respected","Enough time and energy for life outside work"],
+"Supportive management and feedback":["Clear expectations","Regular useful feedback","A manager who is available when needed","Help setting priorities","Recognition when I do good work"],
+"Independence and autonomy":["Owning projects from start to finish","Freedom in how I complete work","Long stretches of focused work","Making decisions without constant approval","Being trusted to manage my work"],
+"Teamwork and collaboration":["Regular collaboration","Shared goals and responsibilities","People I can ask for help","Frequent interaction with coworkers","Making decisions together"],
+"Flexibility":["Some control over when I start and end","Ability to adjust for appointments or responsibilities","Flexible location or hybrid options","Flexibility from day to day","Predictable hours with some choice"],
+"Helping other people":["Directly supporting individuals","Improving systems or services for people","Teaching or guiding others","Solving problems that affect people","Seeing who benefits from my work"],
+"Purpose and meaning":["Contributing to something I care about","Seeing a meaningful result","Solving an important problem","Serving a community","Understanding why my work matters"],
+"Earning potential":["Meeting my needs comfortably","Financial security","High earning potential","Regular raises","Supporting the lifestyle I want"],
+"Calm or manageable pace":["Few urgent crises","Manageable workload","Quiet or low-distraction setting","Predictable expectations","Time to think before responding"],
+"Fast-paced or exciting work":["Variety throughout the day","Frequent new challenges","Quick decisions","High energy","Little repetition"],
+"Creativity":["Generating new ideas","Designing or making things","Trying different approaches","Solving open-ended problems","Freedom to improve how work is done"],
+"Solving challenging problems":["Complex questions","Analyzing information","Troubleshooting","Figuring out better approaches","Problems without obvious answers"],
+"Teaching or mentoring others":["Explaining concepts","Helping someone build skills","Coaching or advising","Supporting someone's growth","Creating learning experiences"],
+"Remote or hybrid work":["Fully remote work","Hybrid work","Occasional work-from-home days","Less commuting","Ability to work from different locations"]
+};
+
+const QUESTION_TEMPLATES = {
+"default": v => `How does ${v.toLowerCase()} typically show up in this career, and how much does it vary by employer or setting?`,
+"Flexibility": () => "How much control do people in this career typically have over their schedules, and how does that vary by employer or setting?",
+"Work-life balance": () => "What do workload, after-hours expectations, busy seasons, and time-off practices typically look like in this career and across different employers?",
+"Independence and autonomy": () => "How much of the work is completed independently versus through meetings, supervision, or collaboration, and how much does that vary by workplace?",
+"Teamwork and collaboration": () => "Who do people in this career work with most often, and how collaborative is the day-to-day work across different settings?",
+"Purpose and meaning": () => "What outcomes do people in this career see from their work, and how do mission, population served, or employer setting change that experience?",
+"Helping other people": () => "How directly does this career involve helping people, and what does that help look like day to day?",
+"Earning potential": () => "What does compensation typically look like over time, and how much do employer, setting, geography, and experience affect it?",
+"Remote or hybrid work": () => "How common are remote or hybrid arrangements in this career, and which employers or settings are most likely to offer them?",
+"Connection with coworkers": () => "How much interaction do people in this career typically have with coworkers, and what should I look for when evaluating team culture at a specific employer?",
+"Supportive management and feedback": () => "How is supervision typically structured, and what questions could I ask a specific employer to understand its feedback and management culture?",
+"Growth and development": () => "What growth paths exist in this career, and how do training, mentorship, and advancement opportunities vary by employer?",
+"Workplace safety and well-being": () => "What working conditions are common in this career, and what should I investigate about a specific employer's culture, workload, safety, and well-being supports?",
+"Benefits and financial security": () => "What compensation is typical in this career, and what benefits should I compare across specific employers?",
+"Time off": () => "What should I ask or research about vacation, sick leave, holidays, and leave practices at specific employers?",
+"Recognition and appreciation": () => "What questions could I ask to understand how a workplace gives feedback, recognizes contributions, and celebrates accomplishments?"
+};
+
+const state = {
+  sortIndex:0,
+  sort:{},
+  priorities:[],
+  strongest:[],
+  deal:{},
+  avoidKeep:[],
+  meanings:{},
+  meaningOther:{},
+  research:{},
+  showMightMatter:false
+};
+
+function saveLocal(){
+  localStorage.setItem("uiowaCareerValuesDraft_v9", JSON.stringify(state));
+}
+function showStep(n){
+  document.querySelectorAll(".step").forEach(s=>s.classList.toggle("active", +s.dataset.step===n));
+  const names=["","Quick sort","Choose your top 5","Choose non-negotiables","Make it concrete","Your Values Profile","Career research"];
+  document.getElementById("progressLabel").textContent=`Step ${n} of 6`;
+  document.getElementById("progressName").textContent=names[n];
+  document.getElementById("progressBar").style.width=`${(n/6)*100}%`;
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(n===2) renderPriorities();
+  if(n===3) renderDeals();
+  if(n===4) renderMeanings();
+  if(n===5) renderProfile();
+  if(n===6) renderResearch();
+}
+function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function renderSort(){
+  const i=state.sortIndex;
+  document.getElementById("sortCounter").textContent=`${i+1} of ${VALUES.length}`;
+  document.getElementById("sortValue").textContent=VALUES[i];
+  document.getElementById("sortBack").disabled=i===0;
+}
+function chooseSort(bucket){
+  state.sort[VALUES[state.sortIndex]]=bucket;
+  if(state.sortIndex<VALUES.length-1){state.sortIndex++;renderSort();saveLocal()}
+  else {saveLocal();showStep(2)}
+}
+document.querySelectorAll("[data-sort]").forEach(b=>b.addEventListener("click",()=>chooseSort(b.dataset.sort)));
+document.getElementById("sortBack").onclick=()=>{ if(state.sortIndex>0){state.sortIndex--;renderSort()} };
+document.getElementById("sortSkip").onclick=()=>{
+  if(state.sortIndex<VALUES.length-1){state.sortIndex++;renderSort()} else showStep(2);
+};
+document.querySelectorAll("[data-back]").forEach(b=>b.addEventListener("click",()=>showStep(+b.dataset.back)));
+
+
+function priorityCandidates(){
+  const really=VALUES.filter(v=>state.sort[v]==="really");
+  const might=VALUES.filter(v=>state.sort[v]==="might");
+  return state.showMightMatter ? [...really,...might] : really;
+}
+
+function renderPriorities(){
+  const reallyCount=VALUES.filter(v=>state.sort[v]==="really").length;
+  const toggle=document.getElementById("toggleMight");
+  if(toggle){
+    toggle.textContent=state.showMightMatter ? "Hide “Might matter to me” values" : "Show “Might matter to me” values";
+    toggle.onclick=()=>{state.showMightMatter=!state.showMightMatter;renderPriorities();saveLocal()};
+  }
+  const expandBox=document.getElementById("mightExpandBox");
+  if(expandBox){
+    expandBox.querySelectorAll(".auto-warn").forEach(el=>el.remove());
+    if(reallyCount<5 && !state.showMightMatter){
+      expandBox.insertAdjacentHTML("beforeend", `<p class="warn auto-warn" style="margin-bottom:0">You marked ${reallyCount} as “Really matters to me.” Open “Might matter to me” to get to five priorities.</p>`);
+    }
+  }
+
+  const box=document.getElementById("priorityCards");box.innerHTML="";
+  priorityCandidates().forEach(v=>{
+    const wrap=document.createElement("div");
+    wrap.className="select-card"+(state.priorities.includes(v)?" selected":"")+(state.strongest.includes(v)?" priority":"");
+    wrap.innerHTML=`<strong>${esc(v)}</strong><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+      <button type="button" class="btn small chooseP">${state.priorities.includes(v)?"Remove":"Choose as priority"}</button>
+      ${state.priorities.includes(v)?`<button type="button" class="btn small starP">${state.strongest.includes(v)?"★ Strongest":"☆ Mark strongest"}</button>`:""}
+    </div>`;
+    wrap.querySelector(".chooseP").onclick=()=>{
+      if(state.priorities.includes(v)){state.priorities=state.priorities.filter(x=>x!==v);state.strongest=state.strongest.filter(x=>x!==v)}
+      else if(state.priorities.length<5) state.priorities.push(v);
+      renderPriorities();saveLocal();
+    };
+    const star=wrap.querySelector(".starP");
+    if(star) star.onclick=()=>{
+      if(state.strongest.includes(v)) state.strongest=state.strongest.filter(x=>x!==v);
+      else if(state.strongest.length<3) state.strongest.push(v);
+      renderPriorities();saveLocal();
+    };
+    box.appendChild(wrap);
+  });
+  document.getElementById("strongestPills").innerHTML=state.strongest.length?state.strongest.map(v=>`<span class="pill">★ ${esc(v)}</span>`).join(""):`<span class="micro">None marked yet</span>`;
+}
+document.getElementById("toStep3").onclick=()=>{
+  const warn=document.getElementById("priorityWarn");
+  if(state.priorities.length!==5 || state.strongest.length<1){warn.textContent="Choose exactly 5 priority values and mark at least 1 strongest priority.";warn.classList.remove("hidden");return}
+  warn.classList.add("hidden"); showStep(3);
+};
+
+function renderDeals(){
+  const box=document.getElementById("dealRows");box.innerHTML="";
+  const table=document.createElement("table");table.className="value-table";
+  table.innerHTML=`<thead><tr><th>Priority value</th><th>Non-negotiable?</th></tr></thead><tbody></tbody>`;
+  const tb=table.querySelector("tbody");
+  state.priorities.forEach(v=>{
+    const isMust=state.deal[v]==="must";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${esc(v)}</td><td><label class="compact-check"><input type="checkbox" ${isMust?"checked":""}><span>Yes — I would be very unlikely to compromise on this</span></label></td>`;
+    tr.querySelector("input").onchange=e=>{state.deal[v]=e.target.checked?"must":"preference";saveLocal()};
+    tb.appendChild(tr);
+  });
+  box.appendChild(table);
+
+  const avoids=VALUES.filter(v=>state.sort[v]==="avoid");
+  if(state.avoidKeep.length===0) state.avoidKeep=[...avoids];
+  const abox=document.getElementById("avoidCards");abox.innerHTML="";
+  if(!avoids.length){abox.innerHTML=`<p class="micro">You did not mark anything as something you would rather avoid.</p>`}
+  avoids.forEach(v=>{
+    const b=document.createElement("button");b.type="button";
+    b.className="select-card"+(state.avoidKeep.includes(v)?" selected":"");
+    b.innerHTML=`<strong>${esc(v)}</strong>`;
+    b.onclick=()=>{
+      state.avoidKeep=state.avoidKeep.includes(v)?state.avoidKeep.filter(x=>x!==v):[...state.avoidKeep,v];
+      renderDeals();saveLocal();
+    };abox.appendChild(b);
+  });
+}
+document.getElementById("toStep4").onclick=()=>showStep(4);
+
+
+function meaningOptions(v){
+  return MEANINGS[v] || [
+    `Having this be a regular part of my work`,
+    `Having some choice or control around this`,
+    `Working somewhere that clearly supports this`,
+    `Seeing evidence of this in day-to-day work`,
+    `Having enough of this to feel satisfied`
+  ];
+}
+function renderMeanings(){
+  const box=document.getElementById("meaningRows");box.innerHTML="";
+  state.strongest.forEach(v=>{
+    if(!state.meanings[v]) state.meanings[v]=[];
+    const block=document.createElement("div");block.className="meaning-block";
+    block.innerHTML=`<h3>${esc(v)}</h3><p class="micro">When you picture this in a job, what matters to you?</p>
+      <div class="check-grid"></div>
+      <label><strong>Something else this means to me</strong> <span class="micro">(optional)</span></label>
+      <textarea placeholder="Add your own description...">${esc(state.meaningOther[v]||"")}</textarea>`;
+    const cg=block.querySelector(".check-grid");
+    meaningOptions(v).forEach(opt=>{
+      const lab=document.createElement("label");lab.className="check";
+      lab.innerHTML=`<input type="checkbox" ${state.meanings[v].includes(opt)?"checked":""}><span>${esc(opt)}</span>`;
+      lab.querySelector("input").onchange=e=>{
+        if(e.target.checked) state.meanings[v]=[...state.meanings[v],opt];
+        else state.meanings[v]=state.meanings[v].filter(x=>x!==opt);
+        saveLocal();
+      };
+      cg.appendChild(lab);
+    });
+    block.querySelector("textarea").oninput=e=>{state.meaningOther[v]=e.target.value;saveLocal()};
+    box.appendChild(block);
+  });
+}
+document.getElementById("toStep5").onclick=()=>{saveLocal();showStep(5)};
+
+function listHtml(items,empty="None identified"){
+  return items.length?`<ul>${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:`<p class="micro">${empty}</p>`;
+}
+function meaningText(v){
+  const bits=[...(state.meanings[v]||[])];
+  if((state.meaningOther[v]||"").trim()) bits.push(state.meaningOther[v].trim());
+  return bits.length?bits.join("; "):"I want to investigate what this would look like in different workplaces.";
+}
+
+function scopeLabel(scope){
+  return scope==="career" ? "Career / work itself" : scope==="workplace" ? "Workplace / employer" : "Both";
+}
+function scopeBadge(scope){
+  return scope==="career" ? "🔎 Career" : scope==="workplace" ? "🏢 Workplace" : "↔ Both";
+}
+
+function renderProfile(){
+  const focus=researchValues();
+  const focusBox=document.getElementById("finalFocusValues");
+  if(focusBox){
+    focusBox.innerHTML=focus.map(v=>`<span class="pill">${esc(v)}</span>`).join(" ");
+  }
+  const p=document.getElementById("profilePriorities");p.innerHTML="";
+  const ordered=[...state.strongest,...state.priorities.filter(v=>!state.strongest.includes(v))];
+  ordered.forEach(v=>{
+    const div=document.createElement("div");div.className="result-card"+(state.strongest.includes(v)?" priority-card":"");
+    const info=VALUE_INFO[v]||{scope:"both",note:"This may depend on both the work itself and the specific workplace."};
+    div.innerHTML=`<div class="label">${state.strongest.includes(v)?"Strongest priority":"Priority"}</div><h3>${esc(v)}</h3>
+      <div class="summary-strip"><span class="pill">${scopeBadge(info.scope)}</span></div>
+      ${state.strongest.includes(v)?`<p>${esc(meaningText(v))}</p>`:""}
+      <p class="micro"><strong>Where to investigate:</strong> ${esc(scopeLabel(info.scope))}. ${esc(info.note)}</p>`;
+    p.appendChild(div);
+  });
+  const must=state.priorities.filter(v=>state.deal[v]==="must");
+  const unsure=state.priorities.filter(v=>state.deal[v]==="unsure");
+  const prefs=state.priorities.filter(v=>state.deal[v]==="preference");
+  document.getElementById("profileMust").innerHTML=listHtml(must);
+  document.getElementById("profilePrefs").innerHTML=listHtml([...unsure,...prefs]);
+  document.getElementById("profileAvoid").innerHTML=listHtml(state.avoidKeep);
+  localStorage.setItem("uiowaCareerValuesProfile_v9",JSON.stringify({
+    priorities:state.priorities,strongest:state.strongest,mustHave:must,preferences:[...unsure,...prefs],
+    avoid:state.avoidKeep,meanings:state.meanings,meaningOther:state.meaningOther,updatedAt:new Date().toISOString()
+  }));
+}
+function profileText(){
+  const must=state.priorities.filter(v=>state.deal[v]==="must");
+  const prefs=state.priorities.filter(v=>state.deal[v]!=="must");
+  return `MY WORK VALUES
+
+Strongest priorities
+${state.strongest.map(v=>`• ${v} [${scopeLabel((VALUE_INFO[v]||{scope:"both"}).scope)}]\n  What that means to me: ${meaningText(v)}`).join("\n")}
+
+Other priority values
+${state.priorities.filter(v=>!state.strongest.includes(v)).map(v=>`• ${v}`).join("\n")||"None"}
+
+Possible must-haves
+${must.map(v=>`• ${v}`).join("\n")||"None identified"}
+
+Strong preferences
+${prefs.map(v=>`• ${v}`).join("\n")||"None identified"}
+
+Things I may want to avoid
+${state.avoidKeep.map(v=>`• ${v}`).join("\n")||"None identified"}`;
+}
+async function copyText(txt,btn,showFallback=true,fallbackBoxId="copyFallback",fallbackTextId="copyFallbackText"){
+  const old=btn.textContent;
+  let copied=false;
+
+  // First try the modern clipboard API.
+  if(navigator.clipboard && window.isSecureContext){
+    try{
+      await navigator.clipboard.writeText(txt);
+      copied=true;
+    }catch(e){}
+  }
+
+  // ICON/iframes may block navigator.clipboard. Try a selected temporary textarea.
+  if(!copied){
+    try{
+      const temp=document.createElement("textarea");
+      temp.value=txt;
+      temp.setAttribute("readonly","");
+      temp.style.position="fixed";
+      temp.style.left="-9999px";
+      temp.style.top="0";
+      document.body.appendChild(temp);
+      temp.focus();
+      temp.select();
+      temp.setSelectionRange(0,temp.value.length);
+      copied=document.execCommand("copy");
+      document.body.removeChild(temp);
+    }catch(e){}
+  }
+
+  if(copied){
+    btn.textContent="Copied!";
+    setTimeout(()=>btn.textContent=old,1400);
+    return true;
+  }
+
+  if(showFallback){
+    const box=document.getElementById(fallbackBoxId);
+    const field=document.getElementById(fallbackTextId);
+    if(box && field){
+      field.value=txt;
+      box.classList.remove("hidden");
+      field.focus();
+      field.select();
+      field.setSelectionRange(0,field.value.length);
+      btn.textContent="Press Ctrl+C / Command+C";
+      setTimeout(()=>btn.textContent=old,2600);
+    }
+  }
+  return false;
+}
+document.getElementById("copyProfile").onclick=e=>copyText(profileText(),e.currentTarget,true);
+document.getElementById("printProfile").onclick=()=>window.print();
+document.getElementById("editAnswers").onclick=()=>showStep(2);
+document.getElementById("toStep6").onclick=()=>showStep(6);
+
+
+function researchValues(){
+  const really=VALUES.filter(v=>state.sort[v]==="really");
+  const eligible=really.filter(v=>{
+    const info=VALUE_INFO[v]||{scope:"both"};
+    return info.scope==="career" || info.scope==="both";
+  });
+
+  const ordered=[];
+  const add=v=>{ if(eligible.includes(v) && !ordered.includes(v)) ordered.push(v); };
+
+  state.strongest.forEach(add);
+  state.priorities.forEach(add);
+  eligible.forEach(add);
+
+  // Keep the final research page focused: no more than 6 values.
+  // If fewer than 3 "really matters" values are career-research relevant,
+  // include remaining "really matters" values even if more workplace-dependent
+  // so the student still has at least 3 values to consider.
+  if(ordered.length<3){
+    really.forEach(v=>{ if(!ordered.includes(v)) ordered.push(v); });
+  }
+
+  return ordered.slice(0,6);
+}
+
+function renderResearch(){
+  const box=document.getElementById("researchRows");box.innerHTML="";
+  const vals=researchValues();
+  if(!vals.length){
+    box.innerHTML=`<p class="micro">No career-research values were selected yet.</p>`;
+    return;
+  }
+
+  const table=document.createElement("table");table.className="value-table research-table";
+  table.innerHTML=`<thead><tr><th>Value</th><th>What I found</th><th>How to investigate further</th></tr></thead><tbody></tbody>`;
+  const tb=table.querySelector("tbody");
+
+  vals.forEach(v=>{
+    if(!state.research[v]) state.research[v]={reaction:"",notes:""};
+    const info=VALUE_INFO[v]||{scope:"both",note:"This may depend on both the work itself and the specific workplace."};
+    const q=(QUESTION_TEMPLATES[v]||QUESTION_TEMPLATES.default)(v);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>
+        <strong>${esc(v)}</strong>
+        <div class="summary-strip"><span class="pill">${scopeBadge(info.scope)}</span></div>
+        ${state.priorities.includes(v)?`<div class="mini-note"><strong>Top 5 value</strong></div>`:""}
+      </td>
+      <td>
+        <textarea class="research-notes" placeholder="Add notes from YouScience, O*NET, career pages, conversations, classes, or other research...">${esc(state.research[v].notes||"")}</textarea>
+      </td>
+      <td>
+        <div class="mini-note">${esc(info.note)}</div>
+        <div class="question" style="margin-top:8px">${esc(q)}</div>
+      </td>`;
+    tr.querySelector("textarea").oninput=e=>{state.research[v].notes=e.target.value;renderQuestions();saveLocal()};
+    tb.appendChild(tr);
+  });
+  box.appendChild(table);
+
+  document.getElementById("careerName").value=state.careerName||"";
+  renderQuestions();
+}
+
+document.getElementById("careerName").oninput=e=>{state.careerName=e.target.value;renderQuestions();saveLocal()};
+
+function renderQuestions(){
+  const qs=researchValues().map(v=>(QUESTION_TEMPLATES[v]||QUESTION_TEMPLATES.default)(v));
+  document.getElementById("questionOutput").innerHTML=qs.map(q=>`<div class="question">${esc(q)}</div>`).join("");
+}
+function researchText(){
+  const career=(state.careerName||"the career I'm researching").trim();
+  return `${profileText()}
+
+CAREER RESEARCH: ${career}
+
+${researchValues().map(v=>{
+  const r=state.research[v]||{};
+  const rx={promising:"Looks promising",unknown:"I'm not sure yet",concern:"This may be a concern"}[r.reaction]||"Not rated yet";
+  return `${v}
+Reaction: ${rx}
+Evidence / notes: ${r.notes||"No notes yet"}
+Question: ${(QUESTION_TEMPLATES[v]||QUESTION_TEMPLATES.default)(v)}`;
+}).join("\n\n")}`;
+}
+
+function notebookText(){
+  const career=(state.careerName||"Career not entered").trim();
+  const must=state.priorities.filter(v=>state.deal[v]==="must");
+  const otherTop=state.priorities.filter(v=>!state.strongest.includes(v));
+
+  const sections=researchValues().map((v,i)=>{
+    const r=state.research[v]||{};
+    const info=VALUE_INFO[v]||{scope:"both"};
+    const q=(QUESTION_TEMPLATES[v]||QUESTION_TEMPLATES.default)(v);
+    return `${i+1}. ${v}${state.priorities.includes(v)?" (Top 5 value)":""}
+Where to investigate: ${scopeLabel(info.scope)}
+What I found:
+${r.notes||""}
+What I still want to know:
+${q}`;
+  }).join("\n\n");
+
+  return `CAREER VALUES + RESEARCH
+
+MY VALUES PROFILE
+
+Strongest priorities
+${state.strongest.map(v=>`• ${v}`).join("\n") || "• None identified"}
+
+Other top values
+${otherTop.map(v=>`• ${v}`).join("\n") || "• None"}
+
+Non-negotiables
+${must.map(v=>`• ${v}`).join("\n") || "• None identified"}
+
+Things I may want to avoid
+${state.avoidKeep.map(v=>`• ${v}`).join("\n") || "• None identified"}
+
+CAREER I RESEARCHED
+${career}
+
+WHAT I FOUND
+
+${sections}
+
+QUESTIONS TO KEEP INVESTIGATING
+${researchValues().map(v=>`• ${(QUESTION_TEMPLATES[v]||QUESTION_TEMPLATES.default)(v)}`).join("\n")}`;
+}
+
+document.getElementById("copyResearch").onclick=e=>copyText(researchText(),e.currentTarget,true,"researchCopyFallback","researchCopyFallbackText");
+document.getElementById("copyNotebook").onclick=e=>copyText(notebookText(),e.currentTarget,true,"researchCopyFallback","researchCopyFallbackText");
+document.getElementById("saveResearch").onclick=e=>{
+  localStorage.setItem("uiowaCareerValuesResearch_v9",JSON.stringify({
+    career:state.careerName||"",
+    profile:JSON.parse(localStorage.getItem("uiowaCareerValuesProfile_v9")||"{}"),
+    research:state.research,
+    questions:researchValues().map(v=>(QUESTION_TEMPLATES[v]||QUESTION_TEMPLATES.default)(v)),
+    updatedAt:new Date().toISOString()
+  }));
+  const b=e.currentTarget,old=b.textContent;b.textContent="Saved in this browser";setTimeout(()=>b.textContent=old,1700);
+};
+document.getElementById("resetTool").onclick=()=>{
+  if(!confirm("Start over and clear your answers?")) return;
+  localStorage.removeItem("uiowaCareerValuesDraft_v9");
+  location.reload();
+};
+
+renderSort();
+</script>
+</body>
+</html>
